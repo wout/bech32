@@ -2,8 +2,8 @@ require "../spec_helper"
 
 describe Bech32 do
   describe "#decode" do
-    {% for expected in VALID_BECH32 %}
-      it "decodes string with prefix #{{{expected}}[:prefix]}" do
+    {% for expected in VALID_BECH32_DECODE %}
+      it "decodes string with prefix '{{expected[:prefix].id}}'" do
         expected = {{expected}}
 
         if limit = expected[:limit]?
@@ -17,11 +17,13 @@ describe Bech32 do
       end
     {% end %}
 
-    # it "does" do
-    #   # s = "split1checkupstagehandshakeupstreamerranterredcaperred2y9e3w"
-    #   s = "addr_test1qqzdl92zkvjpy95ggya0ddwke22c28x68t06s26dmf7e5vglaeslj4r7yyt83ktudh92uxs4qu08x8klfx4psnz8ka7qg85knz"
-    #   Bech32.decode(s, 108)
-    # end
+    {% for expected in INVALID_BECH32_DECODE %}
+      it "fails to decode '{{expected[:string].id}}'" do
+        expect_raises(Bech32::Exception, {{expected[:excpetion]}}) do
+          Bech32.decode({{expected[:string]}})
+        end
+      end
+    {% end %}
 
     it "raises if the string is too short" do
       expect_raises(Bech32::Exception, "'blabla1' is too short") do

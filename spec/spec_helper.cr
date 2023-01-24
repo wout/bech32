@@ -1,7 +1,7 @@
 require "spec"
 require "../src/bech32"
 
-VALID_BECH32 = {
+VALID_BECH32_DECODE = {
   {
     string: "A12UEL5L",
     prefix: "A",
@@ -38,5 +38,52 @@ VALID_BECH32 = {
     hex:    "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     bytes:  Bytes[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     limit:  300,
+  },
+}
+
+INVALID_BECH32_DECODE = {
+  {
+    string:    "A12Uel5l",
+    exception: "Mixed-case string A12Uel5l",
+  },
+  {
+    string:    " 1nwldj5",
+    exception: "Invalid prefix",
+  },
+  {
+    string:    "abc1rzg",
+    exception: "'abc1rzg' is too short",
+  },
+  {
+    string:    "an84characterslonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1569pvx",
+    exception: "Exceeds length limit",
+  },
+  {
+    string:    "x1b4n0q5v",
+    exception: "Unknown character b",
+  },
+  {
+    string:    "1pzry9x0s0muk",
+    exception: "Missing prefix",
+  },
+  {
+    string:    "pzry9x0s0muk",
+    exception: "No separator character",
+  },
+  {
+    string:    "abc1rzgt4",
+    exception: "Data too short",
+  },
+  {
+    string:    "s1vcsyn",
+    exception: "'s1vcsyn' is too short",
+  },
+  {
+    string:    "11qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqc8247j",
+    exception: "Exceeds length limit",
+  },
+  {
+    string:    "li1dgmt3",
+    exception: "Data too short",
   },
 }
