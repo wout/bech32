@@ -1,49 +1,33 @@
 module Bech32
   extend self
 
-  {% begin %}
-    ALPHABET = {
-      {% for char, i in "qpzry9x8gf2tvdw0s3jn54khce6mua7l".split("") %}
-        {{char}}: {{i}}.to_u8,
-      {% end %}
-    }
-  {% end %}
-
-  enum Encoding
-    Bech32  =          1
-    Bech32M = 0x2bc830a3
-  end
-
   def decode(
     value : String,
     limit = 90,
     encoding = Encoding::Bech32
-  ) : Tuple(String, Bytes)
+  ) : Tuple(String, Words)
     prefix, data, upcase = sanitize_and_parse_parts(value, limit)
-    check, chars = prefix_check(prefix), [] of UInt8
+    check, words = prefix_check(prefix), Words.new
 
     data.each.with_index do |c, i|
       raise Exception.new("Unknown character #{c}") unless v = ALPHABET[c]?
       check = polymod_step(check) ^ v
-      chars.push(v) if i + 6 < data.size
+      words.push(v) if i + 6 < data.size
     end
 
     check == encoding.value || raise Exception.new("Invalid checksum #{check}")
 
-    {
-      upcase ? prefix.upcase : prefix,
-      Bytes.new(chars.size).fill { |i| chars[i] },
-    }
+    {upcase ? prefix.upcase : prefix, words}
   end
 
   private def prefix_check(prefix : String)
-    chars = prefix.to_slice
-    check = chars.reduce(1) do |memo, c|
-      c >= 33 && c <= 126 || raise Exception.new("Invalid prefix '#{prefix}'")
-      polymod_step(memo) ^ (c >> 5)
+    words = prefix.to_slice
+    check = words.reduce(1) do |memo, w|
+      w >= 33 && w <= 126 || raise Exception.new("Invalid prefix '#{prefix}'")
+      polymod_step(memo) ^ (w >> 5)
     end
-    chars.reduce(polymod_step(check)) do |memo, c|
-      polymod_step(memo) ^ (c & 0x1f)
+    words.reduce(polymod_step(check)) do |memo, w|
+      polymod_step(memo) ^ (w & 0x1f)
     end
   end
 

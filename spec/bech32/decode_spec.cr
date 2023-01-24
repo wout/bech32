@@ -7,13 +7,13 @@ describe Bech32 do
         expected = {{expected}}
 
         if limit = expected[:limit]?
-          prefix, butes = Bech32.decode(expected[:string], limit)
+          prefix, words = Bech32.decode(expected[:string], limit)
         else
-          prefix, butes = Bech32.decode(expected[:string])
+          prefix, words = Bech32.decode(expected[:string])
         end
 
         prefix.should eq(expected[:prefix])
-        butes.should eq(expected[:bytes])
+        words.should eq(expected[:words])
       end
     {% end %}
 
