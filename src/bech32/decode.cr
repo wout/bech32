@@ -1,21 +1,51 @@
 module Bech32
   extend self
 
-  def decode(value : String, limit : Int32 = 90)
-    prefix, data = sanitize_and_parse_parts(value, limit)
+  {% begin %}
+    ALPHABET = {
+      {% for char, i in "qpzry9x8gf2tvdw0s3jn54khce6mua7l".split("") %}
+        {{char}}: {{i}}.to_u8,
+      {% end %}
+    }
+  {% end %}
+
+  enum Encoding
+    Bech32  =          1
+    Bech32M = 0x2bc830a3
+  end
+
+  def decode(
+    value : String,
+    limit = 90,
+    encoding = Encoding::Bech32
+  ) : Tuple(String, Bytes)
+    prefix, data, upcase = sanitize_and_parse_parts(value, limit)
+    check, chars = prefix_check(prefix), [] of UInt8
+
+    data.each.with_index do |c, i|
+      raise Exception.new("Unknown character #{c}") unless v = ALPHABET[c]?
+      check = polymod_step(check) ^ v
+      chars.push(v) if i + 6 < data.size
+    end
+
+    check == encoding.value || raise Exception.new("Invalid checksum #{check}")
+    words = Bytes.new(chars.size).fill { |i| chars[i] }
+    {upcase ? prefix.upcase : prefix, words}
   end
 
   private def prefix_check(prefix : String)
-    check = 1
-    prefix.bytes.each do |c|
+    check, chars = 1, prefix.to_slice
+    chars.each do |c|
       c >= 33 && c <= 126 || raise Exception.new("Invalid prefix '#{prefix}'")
       check = polymod_step(check) ^ (c >> 5)
     end
-    check = polymod_step(check)
-    prefix.bytes.each do |c|
-      check = polymod_step(check) ^ (c & 0x1f)
+    # check = polymod_step(check)
+    # chars.each { |c| check = polymod_step(check) ^ (c & 0x1f) }
+    # check
+
+    chars.reduce(polymod_step(check)) do |memo, c|
+      polymod_step(memo) ^ (c & 0x1f)
     end
-    check
   end
 
   private def polymod_step(p : Int32) : Int32
@@ -28,24 +58,22 @@ module Bech32
       (-((b >> 4) & 1) & 0x2a1462b3)
   end
 
-  private def sanitize_and_parse_parts(value, limit) : Tuple(String, String)
+  private def sanitize_and_parse_parts(value, limit) : Tuple(String, Array(String), Bool)
     value.size >= 8 ||
       raise Exception.new("'#{value}' is too short")
     value.size <= limit ||
       raise Exception.new("Exceeds length limit")
-    value == value.downcase || value == value.upcase ||
+    value == (downcased = value.downcase) || value == value.upcase ||
       raise Exception.new("Mixed-case string")
     (split = value.rindex('1')) ||
       raise Exception.new("No separator character")
     split != 0 ||
       raise Exception.new("Missing prefix")
 
-    value = value.downcase
-    prefix, data = value[0...split], value[split.succ..]
+    prefix, data = downcased[0...split], downcased[split.succ..]
 
-    data.size >= 6 ||
-      raise Exception.new("Data part '#{data}' is too short")
+    data.size >= 6 || raise Exception.new("Data part '#{data}' is too short")
 
-    {prefix, data}
+    {prefix, data.split(""), value == value.upcase}
   end
 end
