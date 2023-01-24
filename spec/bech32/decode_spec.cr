@@ -1,8 +1,8 @@
 require "../spec_helper"
 
 describe Bech32 do
-  describe "#decode" do
-    {% for expected in VALID_BECH32_DECODE %}
+  describe ".decode" do
+    {% for expected in VALID_BECH32 %}
       it "decodes string with prefix '{{expected[:prefix].id}}'" do
         expected = {{expected}}
 
@@ -17,7 +17,7 @@ describe Bech32 do
       end
     {% end %}
 
-    {% for expected in INVALID_BECH32_DECODE %}
+    {% for expected in INVALID_BECH32 %}
       it "fails to decode '{{expected[:string].id}}'" do
         expect_raises(Bech32::Exception, {{expected[:excpetion]}}) do
           Bech32.decode({{expected[:string]}})
@@ -25,7 +25,7 @@ describe Bech32 do
       end
     {% end %}
 
-    {% for expected in VALID_BECH32M_DECODE %}
+    {% for expected in VALID_BECH32M %}
       it "decodes string with prefix '{{expected[:prefix].id}}'" do
         expected = {{expected}}
         encoding = Bech32::Encoding::Bech32M
@@ -41,7 +41,7 @@ describe Bech32 do
       end
     {% end %}
 
-    {% for expected in INVALID_BECH32M_DECODE %}
+    {% for expected in INVALID_BECH32M %}
       it "fails to decode '{{expected[:string].id}}'" do
         expect_raises(Bech32::Exception, {{expected[:excpetion]}}) do
           Bech32.decode({{expected[:string]}}, encoding: Bech32::Encoding::Bech32M)

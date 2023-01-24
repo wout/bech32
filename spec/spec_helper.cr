@@ -17,7 +17,7 @@ VALID_CONVERT = {
   ],
 }
 
-VALID_BECH32_DECODE = {
+VALID_BECH32 = {
   {
     string: "A12UEL5L",
     prefix: "A",
@@ -57,7 +57,7 @@ VALID_BECH32_DECODE = {
   },
 }
 
-INVALID_BECH32_DECODE = {
+INVALID_BECH32 = {
   {
     string:    "A12Uel5l",
     exception: "Mixed-case string A12Uel5l",
@@ -104,7 +104,7 @@ INVALID_BECH32_DECODE = {
   },
 }
 
-VALID_BECH32M_DECODE = {
+VALID_BECH32M = {
   {
     string: "A1LQFN3A",
     prefix: "A",
@@ -155,7 +155,7 @@ VALID_BECH32M_DECODE = {
   },
 }
 
-INVALID_BECH32M_DECODE = {
+INVALID_BECH32M = {
   {
     string:    "A1LQfN3A",
     exception: "Mixed-case string 'A1LQfN3A'",

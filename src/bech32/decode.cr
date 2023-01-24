@@ -3,14 +3,14 @@ module Bech32
 
   def decode(
     value : String,
-    limit = 90,
+    limit = LIMIT,
     encoding = Encoding::Bech32
   ) : Tuple(String, Bytes)
     prefix, data, upcase = sanitize_and_parse_parts(value, limit)
     check, words = prefix_check(prefix), Array(UInt8).new
 
     data.each.with_index do |c, i|
-      raise Exception.new("Unknown character #{c}") unless v = ALPHABET[c]?
+      raise Exception.new("Unknown character #{c}") unless v = ALPHABET_MAP[c]?
       check = polymod_step(check) ^ v
       words.push(v) if i + 6 < data.size
     end
@@ -18,27 +18,6 @@ module Bech32
     check == encoding.value || raise Exception.new("Invalid checksum #{check}")
 
     {upcase ? prefix.upcase : prefix, bytes_from_array(words)}
-  end
-
-  private def prefix_check(prefix : String)
-    words = prefix.to_slice
-    check = words.reduce(1) do |memo, w|
-      w >= 33 && w <= 126 || raise Exception.new("Invalid prefix '#{prefix}'")
-      polymod_step(memo) ^ (w >> 5)
-    end
-    words.reduce(polymod_step(check)) do |memo, w|
-      polymod_step(memo) ^ (w & 0x1f)
-    end
-  end
-
-  private def polymod_step(p : Int32) : Int32
-    b = p >> 25
-    ((p & 0x1ffffff) << 5) ^
-      (-((b >> 0) & 1) & 0x3b6a57b2) ^
-      (-((b >> 1) & 1) & 0x26508e6d) ^
-      (-((b >> 2) & 1) & 0x1ea119fa) ^
-      (-((b >> 3) & 1) & 0x3d4233dd) ^
-      (-((b >> 4) & 1) & 0x2a1462b3)
   end
 
   private def sanitize_and_parse_parts(value, limit) : Tuple(String, Array(String), Bool)
