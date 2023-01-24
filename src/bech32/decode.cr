@@ -29,20 +29,19 @@ module Bech32
     end
 
     check == encoding.value || raise Exception.new("Invalid checksum #{check}")
-    words = Bytes.new(chars.size).fill { |i| chars[i] }
-    {upcase ? prefix.upcase : prefix, words}
+
+    {
+      upcase ? prefix.upcase : prefix,
+      Bytes.new(chars.size).fill { |i| chars[i] },
+    }
   end
 
   private def prefix_check(prefix : String)
-    check, chars = 1, prefix.to_slice
-    chars.each do |c|
+    chars = prefix.to_slice
+    check = chars.reduce(1) do |memo, c|
       c >= 33 && c <= 126 || raise Exception.new("Invalid prefix '#{prefix}'")
-      check = polymod_step(check) ^ (c >> 5)
+      polymod_step(memo) ^ (c >> 5)
     end
-    # check = polymod_step(check)
-    # chars.each { |c| check = polymod_step(check) ^ (c & 0x1f) }
-    # check
-
     chars.reduce(polymod_step(check)) do |memo, c|
       polymod_step(memo) ^ (c & 0x1f)
     end
