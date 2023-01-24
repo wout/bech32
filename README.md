@@ -37,4 +37,3 @@ TODO: Write development instructions here
 ## Contributors
 
 - [Wout](https://github.com/wout) - creator and maintainer
-# bech32
