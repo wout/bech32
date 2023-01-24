@@ -9,10 +9,12 @@ module Bech32
     }
   {% end %}
 
-  alias Words = Array(UInt8)
-
   enum Encoding
     Bech32  =          1
     Bech32M = 0x2bc830a3
+  end
+
+  private def bytes_from_array(array : Array(UInt8)) : Bytes
+    Bytes.new(array.size).fill { |i| array[i] }
   end
 end

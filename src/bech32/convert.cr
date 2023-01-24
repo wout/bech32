@@ -1,34 +1,22 @@
 module Bech32
   extend self
 
-  def to_words(bytes : Bytes) : Words
-    convert(bytes)
+  def to_words(bytes : Bytes) : Bytes
+    bytes_from_array(convert_bits(bytes, 8, 5, true))
   end
 
-  def from_words(words : Words) : Bytes
-    convert(words)
-  end
-
-  def convert(bytes : Bytes) : Words
-    convert_bits(bytes, 8, 5, true).map(&.to_u8)
-  end
-
-  def convert(words : Words) : Bytes
-    bits = convert_bits(words, 5, 8, false)
-    Bytes.new(bits.size).fill { |i| bits[i].to_u8 }
+  def from_words(words : Bytes) : Bytes
+    bytes_from_array(convert_bits(words, 5, 8, false))
   end
 
   private def convert_bits(
-    data : Bytes | Words,
+    data : Bytes,
     from : Int32,
     to : Int32,
     padding : Bool
-  ) : Array(Int32)
-    acc = 0
-    bits = 0
-    ret = Array(Int32).new
-    maxv = (1 << to) - 1
-    max_acc = (1 << (from + to - 1)) - 1
+  ) : Array(UInt8)
+    acc, bits, result = 0, 0, Array(UInt8).new
+    max_v, max_acc = (1 << to) - 1, (1 << (from + to - 1)) - 1
 
     data.each do |v|
       raise Exception.new("Invalid bit") if v < 0 || (v >> from) != 0
@@ -36,17 +24,17 @@ module Bech32
       bits += from
       while bits >= to
         bits -= to
-        ret << ((acc >> bits) & maxv)
+        result << ((acc >> bits) & max_v).to_u8
       end
     end
 
     if padding
-      ret << ((acc << (to - bits)) & maxv) unless bits == 0
+      result << ((acc << (to - bits)) & max_v).to_u8 unless bits == 0
     else
       raise Exception.new("Excess padding") if bits >= from
-      raise Exception.new("Non-zero padding") if ((acc << (to - bits)) & maxv) != 0
+      raise Exception.new("Non-zero padding") if ((acc << (to - bits)) & max_v) != 0
     end
 
-    ret
+    result
   end
 end

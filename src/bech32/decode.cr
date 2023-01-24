@@ -5,9 +5,9 @@ module Bech32
     value : String,
     limit = 90,
     encoding = Encoding::Bech32
-  ) : Tuple(String, Words)
+  ) : Tuple(String, Bytes)
     prefix, data, upcase = sanitize_and_parse_parts(value, limit)
-    check, words = prefix_check(prefix), Words.new
+    check, words = prefix_check(prefix), Array(UInt8).new
 
     data.each.with_index do |c, i|
       raise Exception.new("Unknown character #{c}") unless v = ALPHABET[c]?
@@ -17,7 +17,7 @@ module Bech32
 
     check == encoding.value || raise Exception.new("Invalid checksum #{check}")
 
-    {upcase ? prefix.upcase : prefix, words}
+    {upcase ? prefix.upcase : prefix, bytes_from_array(words)}
   end
 
   private def prefix_check(prefix : String)
