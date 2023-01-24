@@ -103,3 +103,121 @@ INVALID_BECH32_DECODE = {
     exception: "Data too short",
   },
 }
+
+VALID_BECH32M_DECODE = {
+  {
+    string: "A1LQFN3A",
+    prefix: "A",
+    hex:    "",
+    words:  Bytes[],
+  },
+  {
+    string: "a1lqfn3a",
+    prefix: "a",
+    hex:    "",
+    words:  Bytes[],
+  },
+  {
+    string: "an83characterlonghumanreadablepartthatcontainsthetheexcludedcharactersbioandnumber11sg7hg6",
+    prefix: "an83characterlonghumanreadablepartthatcontainsthetheexcludedcharactersbioandnumber1",
+    hex:    "",
+    words:  Bytes[],
+  },
+  {
+    string: "abcdef1l7aum6echk45nj3s0wdvt2fg8x9yrzpqzd3ryx",
+    prefix: "abcdef",
+    hex:    "ffbbcdeb38bdab49ca307b9ac5a928398a418820",
+    words:  Bytes[31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+  },
+  {
+    string: "11llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllludsr8",
+    prefix: "1",
+    words:  Bytes[31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31],
+  },
+  {
+    string: "split1checkupstagehandshakeupstreamerranterredcaperredlc445v",
+    prefix: "split",
+    hex:    "c5f38b70305f519bf66d85fb6cf03058f3dde463ecd7918f2dc743918f2d",
+    words:  Bytes[24, 23, 25, 24, 22, 28, 1, 16, 11, 29, 8, 25, 23, 29, 19, 13, 16, 23, 29, 22, 25, 28, 1, 16, 11, 3, 25, 29, 27, 25, 3, 3, 29, 19, 11, 25, 3, 3, 25, 13, 24, 29, 1, 25, 3, 3, 25, 13],
+  },
+  {
+    string: "?1v759aa",
+    prefix: "?",
+    hex:    "",
+    words:  Bytes[],
+  },
+  {
+    string: "11qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqszh4cp",
+    prefix: "1",
+    hex:    "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    words:  Bytes[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    limit:  300,
+  },
+}
+
+INVALID_BECH32M_DECODE = {
+  {
+    string:    "A1LQfN3A",
+    exception: "Mixed-case string 'A1LQfN3A'",
+  },
+  {
+    string:    " 1xj0phk",
+    exception: "Invalid prefix \\( \\)",
+  },
+  {
+    string:    "abc1rzg",
+    exception: "'abc1rzg' is too short",
+  },
+  {
+    string:    "an84characterslonghumanreadablepartthatcontainsthetheexcludedcharactersbioandnumber11d6pts4",
+    exception: "Exceeds length limit",
+  },
+  {
+    string:    "qyrz8wqd2c9m",
+    exception: "No separator character for qyrz8wqd2c9m",
+  },
+  {
+    string:    "1qyrz8wqd2c9m",
+    exception: "Missing prefix for 1qyrz8wqd2c9m",
+  },
+  {
+    string:    "y1b0jsk6g",
+    exception: "Unknown character b",
+  },
+  {
+    string:    "lt1igcx5c0",
+    exception: "Unknown character i",
+  },
+  {
+    string:    "in1muywd",
+    exception: "Data too short",
+  },
+  {
+    string:    "mm1crxm3i",
+    exception: "Unknown character i",
+  },
+  {
+    string:    "au1s5cgom",
+    exception: "Unknown character o",
+  },
+  {
+    string:    "M1VUXWEZ",
+    exception: "Invalid checksum for m1vuxwez",
+  },
+  {
+    string:    "16plkw9",
+    exception: "'16plkw9' is too short",
+  },
+  {
+    string:    "1p2gdwpf",
+    exception: "Missing prefix for 1p2gdwpf",
+  },
+  {
+    string:    "11qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqc8247j",
+    exception: "Exceeds length limit",
+  },
+  {
+    string:    "in1muywd",
+    exception: "Data too short",
+  },
+}
