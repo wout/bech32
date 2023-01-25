@@ -39,6 +39,6 @@ module Bech32
   end
 
   private def bytes_from_array(array : Array(UInt8)) : Bytes
-    Bytes.new(array.size).fill { |i| array[i] }
+    Bytes.new(array.to_unsafe, array.size)
   end
 end
