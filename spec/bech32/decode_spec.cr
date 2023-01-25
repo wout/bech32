@@ -56,7 +56,7 @@ describe Bech32 do
     end
 
     it "raises if the string is too long" do
-      expect_raises(Bech32::LengthException, "Exceeds length limit") do
+      expect_raises(Bech32::LimitException, "Exceeds length limit") do
         Bech32.decode("abcdefghijklmnopqrstuvwxyz", 25)
       end
     end

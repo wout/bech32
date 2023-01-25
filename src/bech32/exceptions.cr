@@ -9,7 +9,11 @@ module Bech32
 
   class LengthException < Bech32::Exception; end
 
+  class LimitException < Bech32::Exception; end
+
   class Non5BitException < Bech32::Exception; end
+
+  class PaddingException < Bech32::Exception; end
 
   class PrefixException < Bech32::Exception; end
 end

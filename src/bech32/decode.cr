@@ -24,7 +24,7 @@ module Bech32
     value.size >= 8 ||
       raise LengthException.new("'#{value}' is too short")
     value.size <= limit ||
-      raise LengthException.new("Exceeds length limit")
+      raise LimitException.new("Exceeds length limit")
     value == (downcased = value.downcase) || value == value.upcase ||
       raise CaseException.new("Mixed-case string")
     (split = value.rindex('1')) ||

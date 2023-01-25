@@ -24,7 +24,7 @@ module Bech32
       polymod_step(memo) ^ (w >> 5)
     end
     words.reduce(polymod_step(check)) do |memo, w|
-      polymod_step(memo) ^ (w & 0x1f)
+      polymod_step(memo) ^ (w & 31)
     end
   end
 

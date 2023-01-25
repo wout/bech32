@@ -8,7 +8,7 @@ module Bech32
     encoding = Encoding::Bech32
   ) : String
     prefix.size + 7 + words.size <= limit ||
-      raise LengthException.new("Exceeds length limit")
+      raise LimitException.new("Exceeds length limit")
 
     upcase = prefix != (prefix = prefix.downcase)
     string = String.build do |io|

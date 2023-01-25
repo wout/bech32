@@ -19,7 +19,7 @@ module Bech32
     max_v, max_acc = (1 << to) - 1, (1 << (from + to - 1)) - 1
 
     data.each do |v|
-      raise Exception.new("Invalid bit") if v < 0 || (v >> from) != 0
+      raise CharException.new("Invalid bit") if v < 0 || (v >> from) != 0
       acc = ((acc << from) | v) & max_acc
       bits += from
       while bits >= to
@@ -31,8 +31,8 @@ module Bech32
     if padding
       result << ((acc << (to - bits)) & max_v).to_u8 unless bits == 0
     else
-      raise Exception.new("Excess padding") if bits >= from
-      raise Exception.new("Non-zero padding") if ((acc << (to - bits)) & max_v) != 0
+      raise PaddingException.new("Excess padding") if bits >= from
+      raise PaddingException.new("Non-zero padding") if ((acc << (to - bits)) & max_v) != 0
     end
 
     result
