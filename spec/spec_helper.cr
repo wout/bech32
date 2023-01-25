@@ -1,4 +1,5 @@
 require "spec"
+require "yaml"
 require "../src/bech32"
 
 VALID_CONVERT = {
