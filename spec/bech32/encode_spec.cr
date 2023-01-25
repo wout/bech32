@@ -18,7 +18,7 @@ describe Bech32 do
 
     {% for example in INVALID_BECH32_ENCODE %}
       it "fails to encode '{{example[:string].id}}'" do
-        expect_raises(Bech32::Exception, {{example[:excpetion]}}) do
+        expect_raises(Bech32::Exception, {{example[:exception]}}) do
           Bech32.encode({{example[:prefix]}}, {{example[:words]}})
         end
       end
@@ -41,11 +41,19 @@ describe Bech32 do
 
     {% for example in INVALID_BECH32M_ENCODE %}
       it "fails to encode '{{example[:string].id}}'" do
-        expect_raises(Bech32::Exception, {{example[:excpetion]}}) do
+        expect_raises(Bech32::Exception, {{example[:exception]}}) do
           encoding = Bech32::Encoding::Bech32M
           Bech32.encode({{example[:prefix]}}, {{example[:words]}}, encoding: encoding)
         end
       end
     {% end %}
+
+    it "raises with an invalid prefix" do
+      example = INVALID_BECH32_ENCODE.find! { |e| e[:exception] == "Invalid prefix" }
+
+      expect_raises(Bech32::PrefixException, "Invalid prefix 'abcÿ'") do
+        Bech32.encode(example[:prefix], example[:words])
+      end
+    end
   end
 end

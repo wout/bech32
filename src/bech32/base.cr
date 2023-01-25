@@ -20,7 +20,7 @@ module Bech32
   private def prefix_check(prefix : String)
     words = prefix.to_slice
     check = words.reduce(1) do |memo, w|
-      w >= 33 && w <= 126 || raise Exception.new("Invalid prefix '#{prefix}'")
+      w >= 33 && w <= 126 || raise PrefixException.new("Invalid prefix '#{prefix}'")
       polymod_step(memo) ^ (w >> 5)
     end
     words.reduce(polymod_step(check)) do |memo, w|

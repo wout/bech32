@@ -8,7 +8,7 @@ module Bech32
     encoding = Encoding::Bech32
   ) : String
     prefix.size + 7 + words.size <= limit ||
-      raise Exception.new("Exceeds length limit")
+      raise LengthException.new("Exceeds length limit")
 
     upcase = prefix != (prefix = prefix.downcase)
     string = String.build do |io|
@@ -16,7 +16,7 @@ module Bech32
       io << prefix
       io << 1
       words.each do |v|
-        raise Exception.new("Non 5-bit word") if v >> 5 != 0
+        raise Non5BitException.new("Non 5-bit word") if v >> 5 != 0
         check = polymod_step(check) ^ v
         io << ALPHABET[v]
       end

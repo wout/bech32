@@ -276,6 +276,6 @@ INVALID_BECH32M_ENCODE = {
   {
     prefix:    "abc\u00ff",
     words:     Bytes[18],
-    exception: "Invalid prefix \\(abc\u00ff\\)",
+    exception: "Invalid prefix 'abc\u00ff'",
   },
 }
