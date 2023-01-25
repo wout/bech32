@@ -8,7 +8,7 @@ describe Bech32 do
     end
   end
 
-  describe ".to_words" do
+  describe ".from_words" do
     it "converts words to bytes" do
       Bech32.from_words(VALID_CONVERT[:words])
         .should eq(VALID_CONVERT[:bytes])
