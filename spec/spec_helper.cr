@@ -57,7 +57,7 @@ VALID_BECH32 = {
   },
 }
 
-INVALID_BECH32 = {
+INVALID_BECH32_DECODE = {
   {
     string:    "A12Uel5l",
     exception: "Mixed-case string A12Uel5l",
@@ -101,6 +101,35 @@ INVALID_BECH32 = {
   {
     string:    "li1dgmt3",
     exception: "Data too short",
+  },
+}
+
+INVALID_BECH32_ENCODE = {
+  {
+    prefix:    "abc",
+    words:     Bytes[128],
+    exception: "Non 5-bit word",
+  },
+  {
+    prefix:    "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzfoobarfoobar",
+    words:     Bytes[128],
+    exception: "Exceeds length limit",
+  },
+  {
+    prefix:    "foobar",
+    words:     Bytes[20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+    exception: "Exceeds length limit",
+  },
+  {
+    prefix:    "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzfoobarfoobarfoobarfoobar",
+    words:     Bytes[128],
+    "limit":   104,
+    exception: "Exceeds length limit",
+  },
+  {
+    prefix:    "abc\u00ff",
+    words:     Bytes[18],
+    exception: "Invalid prefix",
   },
 }
 
@@ -155,7 +184,7 @@ VALID_BECH32M = {
   },
 }
 
-INVALID_BECH32M = {
+INVALID_BECH32M_DECODE = {
   {
     string:    "A1LQfN3A",
     exception: "Mixed-case string 'A1LQfN3A'",
@@ -219,5 +248,34 @@ INVALID_BECH32M = {
   {
     string:    "in1muywd",
     exception: "Data too short",
+  },
+}
+
+INVALID_BECH32M_ENCODE = {
+  {
+    prefix:    "abc",
+    words:     Bytes[128],
+    exception: "Non 5-bit word",
+  },
+  {
+    prefix:    "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzfoobarfoobar",
+    words:     Bytes[128],
+    exception: "Exceeds length limit",
+  },
+  {
+    prefix:    "foobar",
+    words:     Bytes[20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+    exception: "Exceeds length limit",
+  },
+  {
+    prefix:    "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzfoobarfoobarfoobarfoobar",
+    words:     Bytes[128],
+    limit:     104,
+    exception: "Exceeds length limit",
+  },
+  {
+    prefix:    "abc\u00ff",
+    words:     Bytes[18],
+    exception: "Invalid prefix \\(abc\u00ff\\)",
   },
 }

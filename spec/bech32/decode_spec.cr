@@ -17,7 +17,7 @@ describe Bech32 do
       end
     {% end %}
 
-    {% for expected in INVALID_BECH32 %}
+    {% for expected in INVALID_BECH32_DECODE %}
       it "fails to decode '{{expected[:string].id}}'" do
         expect_raises(Bech32::Exception, {{expected[:excpetion]}}) do
           Bech32.decode({{expected[:string]}})
@@ -41,7 +41,7 @@ describe Bech32 do
       end
     {% end %}
 
-    {% for expected in INVALID_BECH32M %}
+    {% for expected in INVALID_BECH32M_DECODE %}
       it "fails to decode '{{expected[:string].id}}'" do
         expect_raises(Bech32::Exception, {{expected[:excpetion]}}) do
           Bech32.decode({{expected[:string]}}, encoding: Bech32::Encoding::Bech32M)
