@@ -7,20 +7,20 @@ module Bech32
     encoding = Encoding::Bech32
   ) : Tuple(String, Bytes)
     prefix, data, upcase = sanitize_and_parse_parts(value, limit)
-    check, words = prefix_check(prefix), Array(UInt8).new
+    check, data_size, words = prefix_check(prefix), data.size, IO::Memory.new
 
-    data.each.with_index do |c, i|
+    data.each_char.with_index do |c, i|
       raise CharException.new("Unknown character #{c}") unless v = ALPHABET_MAP[c]?
       check = polymod_step(check) ^ v
-      words.push(v) if i + 6 < data.size
+      words.write_byte v if i + 6 < data_size
     end
 
     check == encoding.value || raise ChecksumException.new("Invalid checksum #{check}")
 
-    {upcase ? prefix.upcase : prefix, bytes_from_array(words)}
+    {upcase ? prefix.upcase : prefix, words.to_slice}
   end
 
-  private def sanitize_and_parse_parts(value, limit) : Tuple(String, Array(String), Bool)
+  private def sanitize_and_parse_parts(value, limit) : Tuple(String, String, Bool)
     value.size >= 8 ||
       raise LengthException.new("'#{value}' is too short")
     value.size <= limit ||
@@ -36,6 +36,6 @@ module Bech32
 
     data.size >= 6 || raise LengthException.new("Data part '#{data}' is too short")
 
-    {prefix, data.split(""), value == value.upcase}
+    {prefix, data, value == value.upcase}
   end
 end

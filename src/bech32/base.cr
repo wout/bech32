@@ -7,7 +7,7 @@ module Bech32
   {% begin %}
     ALPHABET_MAP = {
       {% for char, i in ALPHABET.split("") %}
-        {{char}}: {{i}}.to_u8,
+        '{{char.id}}' => {{i}}u8,
       {% end %}
     }
   {% end %}
@@ -36,9 +36,5 @@ module Bech32
       (-((b >> 2) & 1) & 0x1ea119fa) ^
       (-((b >> 3) & 1) & 0x3d4233dd) ^
       (-((b >> 4) & 1) & 0x2a1462b3)
-  end
-
-  private def bytes_from_array(array : Array(UInt8)) : Bytes
-    Bytes.new(array.to_unsafe, array.size)
   end
 end
